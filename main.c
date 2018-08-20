@@ -13,7 +13,7 @@
 // なんか sys/memfd.h が見つからなかったのでラーパー書いて対処
 // https://github.com/a-darwish/memfd-examples/blob/master/memfd.h#L14
 static inline int memfd_create(const char *name, unsigned int flags) {
-	return syscall(__NR_memfd_create, name, flags);
+  return syscall(__NR_memfd_create, name, flags);
 }
 
 void die(const char *msg)
@@ -25,9 +25,9 @@ void die(const char *msg)
 void load_shared_object(memfd)
 {
   char path[1024];
-	printf("[+] Load Start\n");
+  printf("[+] Load Start\n");
   snprintf(path, 1024, "/proc/%d/fd/%d", getpid(), memfd);
-	dlopen(path, RTLD_LAZY);
+  dlopen(path, RTLD_LAZY);
 }
 
 size_t write_to_memfd(char *ptr, size_t size, size_t nmemb, int memfd)
@@ -51,7 +51,7 @@ int get_shared_object(char *url)
   curl_easy_setopt(curl, CURLOPT_URL, url);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, memfd);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_memfd);
-  
+
   curl_easy_perform(curl);
   curl_easy_cleanup(curl);
 
@@ -74,6 +74,6 @@ int main (int argc, char **argv)
   char *url = "http://127.0.0.1:8000/hello.so";
   int memfd;
   memfd = get_shared_object(url);
-	load_shared_object(memfd);
-	exit(0);
+  load_shared_object(memfd);
+  exit(0);
 }
